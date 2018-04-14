@@ -1,0 +1,28 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.richfit.scp.privilege.domain.OrgMapper">
+		<resultMap id="orgMap" type="com.richfit.scp.privilege.domain.Org">
+				<id column="org_id" property="id" />
+				<result column="org_name" property="name" />
+				<result column="parent_id" property="parentId" />
+		</resultMap>
+		<select id="getOrgs" resultMap="orgMap">
+				SELECT * FROM p_auth_org
+		</select>
+		<select id="getUserPrivilegedOrgs" resultType="String">
+				<!-- TODO: User v_user_permission view to refactor? -->
+				SELECT DISTINCT
+				(permission.org_id)
+				FROM
+				p_auth_role_res_func permission
+				INNER JOIN
+				p_auth_role role ON permission.role_id = role.role_id
+				INNER JOIN
+				p_auth_user_role user_role ON user_role.role_id = role.role_id
+				WHERE user_role.user_id = #{user_id}
+				<if test="func_id != null">
+						AND permission.func_id = #{func_id}
+				</if>
+		</select>
+</mapper>

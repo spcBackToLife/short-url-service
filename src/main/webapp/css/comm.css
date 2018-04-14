@@ -1,0 +1,406 @@
+@charset "utf-8";
+@import url(base.css);
+
+/* 共通样式
+---------------------------------------------------- */
+/*此版本隐藏*/
+.v-hidden{
+	display: none;
+}
+
+/*文本框样式*/
+.textinput{
+	width:120px;
+	background:url(../../../resources/epui/skins/lightBlue/form/textinput_bg.jpg) repeat-x scroll left top #ffffff;
+	border-color:#a2b3bd;
+	border-style:solid;
+	border-width:1px;
+	height: 20px;
+	line-height: 20px;
+}
+.textinput_hover{
+	width:120px;
+	background:url(../../../resources/epui/skins/lightBlue/form/textinput_bg.jpg) repeat-x scroll left top #ffffff;
+	border-color:#00ccff;/*鼠标移入边框颜色*/
+	border-style:solid;
+	border-width:1px;
+	color:#336699;
+	height: 20px;
+	line-height: 20px;
+}
+.textinput_click{
+	width:120px;
+	background:url(../../../resources/epui/skins/lightBlue/form/textinput_bg.jpg) repeat-x scroll left top #ffffff;
+	border-color:#fbd45c;
+	border-style:solid;
+	border-width:1px;
+	color:#336699;
+	height: 20px;
+	line-height: 20px;
+}
+.textinput[readonly],
+.textinput_hover[readonly],
+.textinput_click[readonly],
+.textinput[disabled],
+.textinput_hover[disabled],
+.textinput_click[disabled]{
+	border: 1px solid #a2b3bd;
+	color: #666;
+  background-color: #eee;
+	background-image: none;
+}
+/* for IE */
+.textinput,
+.textinput_hover,
+.textinput_click{
+	border:expression((this.readOnly && this.readOnly == true)? "#a2b3bd":"");
+	color:expression((this.readOnly && this.readOnly == true)? "#666":"");
+	background-color:expression((this.readOnly && this.readOnly == true)? "#eee":"");
+	background-image:expression((this.readOnly && this.readOnly == true)? "none":"");
+}
+/*文本框样式*/
+
+/*链接下划线样式*/
+span.underLine{
+  color: #008BBC;
+  text-decoration: none;
+  cursor: pointer;
+}
+span.underLine:hover,
+span.underLine:active,
+span.underLine:focus{
+  text-decoration: underline;
+  cursor: pointer;
+}
+/*链接下划线样式*/
+
+/*按钮样式*/
+.button{
+	background:transparent url(../../../resources/epui/skins/lightBlue/form/btn_bg.jpg) repeat scroll 0 0;
+	border:1px solid #9dc2f6;
+	height:24px;
+	line-height:22px;
+	>margin-right:4px;
+	min-width:60px;
+}
+.button.button_hover{
+	background-image:url(../../../resources/epui/skins/lightBlue/form/btn_bg_hover.jpg)!important;
+	border:1px solid #af923f!important;
+}
+.button.toggle{
+	background-image:url(../../../resources/epui/skins/lightBlue/form/btn_bg_hover.jpg)!important;
+	border:1px solid #af923f!important;
+}
+.button2{
+	background:transparent url(../../../resources/epui/skins/lightBlue/form/btn_bg2.jpg) repeat scroll 0 0;
+	border:1px solid #767676;
+	height:27px;
+	line-height:24px;
+	>margin-right:4px;
+	border-radius: 3px 3px 3px 3px;
+	box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.1);
+	 color:#434547;
+	 min-width:60px;
+}
+.button2.button_hover{
+	box-shadow:2px 2px 5px rgba(118,204,255,0.5)!important;
+	border-color:#0782ca!important;
+	color:red!important;
+}
+.buttonswich{
+	width:80px;
+	height:31px;
+	background-image:url(../../../resources/epui/skins/lightBlue/form/swich_off.png);
+	background-repeat:no-repeat;
+	background-color:transparent;
+	border:0;
+	cursor:pointer;
+	cursor:hand;
+}
+.buttonswich.toggle{
+	background-image:url(../../../resources/epui/skins/lightBlue/form/swith_on.png)!important;
+}
+.buttonswich2{
+	width:68px;
+	height:32px;
+	background-image:url(../../../resources/epui/skins/lightBlue/form/swich_off2.png);
+	background-repeat:no-repeat;
+	background-color:transparent;
+	border:0;
+	cursor:pointer;
+	cursor:hand;
+}
+.buttonswich2.toggle{
+	background-image:url(../../../resources/epui/skins/lightBlue/form/swith_on2.png)!important;
+}
+/*按钮样式*/
+
+/*单选下拉框样式*/
+div.selectbox-wrapper {
+	border:#80c0e7 1px solid;  /*展开层边框色*/
+	position: absolute;
+	background-color:#fff;
+	text-align:left;
+	z-index: 100;
+	display:block;
+	left:0px;
+	top:18px;
+	>top:25px;
+}
+div.selectbox-wrapper ul li{
+	white-space:nowrap;
+}
+div.selectbox-wrapper ul li.selected {
+	background-color: #ffefc0;/*选中项背景色*/
+}
+div.selectbox-wrapper ul li.current {
+	color: #fff;
+	background-color: #fba33c;/*鼠标移入项背景色*/
+	border:0!important;
+}
+div.selectbox-wrapper ul li.group{
+	font-weight:bold;
+	background-image:url(../../../resources/epui/skins/lightBlue/form/selArr.gif);
+	background-repeat:no-repeat;
+	background-position:0% 50%;
+	padding-left:15px;
+	_width:80%;
+}
+.selectbox {
+	border:none;
+	cursor: pointer;
+	cursor: hand;
+	HEIGHT: 20px;
+	line-height: 20px;
+	overflow-y:hidden;
+	border-left: solid 1px #80c0e7;/*边框色*/
+	border-top: solid 1px #80c0e7;/*边框色*/
+	border-bottom: solid 1px #80c0e7;/*边框色*/
+	background-image: url(../../../resources/epui/skins/lightBlue/form/selInputBg.jpg);
+	background-repeat: repeat-x;
+	background-color:#ffffff;
+	padding-left:2px;
+}
+.tipColor{
+	color:gray;
+}
+.selBtn{
+	width: 22px;
+	height: 24px;
+	border: 0;
+	border-style:none;
+	background-image: url(../../../resources/epui/skins/lightBlue/form/selBtn.jpg);
+	background-repeat: no-repeat;
+	cursor: pointer;
+	cursor: hand;
+}
+.selBtn_disabled{
+	background-image: url(../../../resources/epui/skins/lightBlue/form/selBtn_disabled.jpg)!important;
+	cursor: default!important;
+}
+.mainCon input.inputDisabled {
+	color: #666;
+	color: #666!important;
+}
+/*单选下拉框样式*/
+
+ /*树形下拉框样式*/
+div.selectbox-tree {
+	border:#80c0e7 1px solid;  /*展开层边框色*/
+	position: absolute;
+	background-color:#fff;
+	text-align:left;
+	z-index: 100;
+	display:block;
+	left:0px;
+	top:18px;
+	>top:25px;
+}
+.selBtnMuiti{
+	background-image: url(../../../resources/epui/skins/lightBlue/form/selBtnMulti.jpg)!important;
+}
+.selBtn_disabledMuiti{
+	background-image: url(../../../resources/epui/skins/lightBlue/form/selBtn_disabledMulti.jpg)!important;
+}
+.selectbox-tree a:hover{
+	background-color:#fba33c!important;/*鼠标移入项背景色*/
+	color:white!important;
+	text-decoration:none!important;
+}
+.multiSelectZtree li  a:hover{
+	background-color:#fba33c!important;/*鼠标移入项背景色*/
+}
+.selectTree li a{
+	padding-top:3px!important;
+	padding-bottom:3px!important;
+	min-width:140px;
+}
+/*树形下拉框样式*/
+
+/*日期控件文本框样式*/
+.date{
+	background-color:#ffffff;/*初始背景色*/
+	border-color:#a2b3bd;/*初始边框色*/
+}
+.date_hover{
+	border-color:#00ccff!important;/*鼠标移入边框颜色*/
+}
+.date_click{
+	border-color:#fbd45c!important;
+}
+.cusDate{
+	background-color:#ffffff;/*初始背景色*/
+	border-color:#a2b3bd;/*初始边框色*/
+}
+.dateIcon{
+	background-color:#ffffff;/*初始背景色*/
+	border-color:#a2b3bd;/*初始边框色*/
+}
+/*日期控件文本框样式*/
+
+/*基本选项卡*/
+.basicTab{
+	background-color:white;
+}
+.basicTab_top{
+	height:21px;
+	overflow:hidden;
+	position: relative;
+	white-space: nowrap;
+}
+.basicTab_top_Container {
+    height: 21px;
+    left: 0px;
+    position: absolute;
+    top: 0px;
+    width: 9999px;
+}
+.basicTab_tabButtonLeft{
+	position:absolute;
+	top:0px;
+	width:17px;
+	height:21px;
+	background-image: url(../../../resources/epui/skins/lightBlue/basicTab/tab_leftBtn.gif);
+	background-repeat: no-repeat;
+	cursor:pointer;
+	cursor:hand;
+}
+.basicTab_tabButtonRight{
+	position:absolute;
+	right:0;
+	top:0px;
+	width:17px;
+	height:21px;
+	background-image: url(../../../resources/epui/skins/lightBlue/basicTab/tab_rightBtn.gif);
+	background-repeat: no-repeat;
+	cursor:pointer;
+	cursor:hand;
+}
+.basicTabContent{
+	overflow:auto;
+}
+.basicTab_con{
+	border:solid 1px #80c0e7;/*容器边框*/
+	padding:5px;
+}
+.basicTab_normal_left{
+	background-image: url(../../../resources/epui/skins/lightBlue/basicTab/normal_left.jpg);
+	background-repeat:no-repeat;
+	float:left;
+	width:17px;
+	height:21px;
+}
+.basicTab_normal_center{
+	background-image: url(../../../resources/epui/skins/lightBlue/basicTab/normal_center.jpg);
+	background-repeat:repeat-x;
+	float:left;
+	height:21px;
+	padding:0 10px 0 10px;
+	cursor:pointer;
+	cursor:hand;
+}
+.basicTab_top a{
+	display:block;
+}
+.basicTab_normal_center a{
+	color:black;
+}
+.basicTab_normal_center a:hover{
+	color:black;
+	text-decoration:none;
+}
+.basicTab_normal_middle{
+	background-image: url(../../../resources/epui/skins/lightBlue/basicTab/normal_middle.jpg);
+	background-repeat:no-repeat;
+	float:left;
+	width:18px;
+	height:21px;
+}
+.basicTab_normal_right{
+	background-image: url(../../../resources/epui/skins/lightBlue/basicTab/normal_right.jpg);
+	background-repeat:no-repeat;
+	float:left;
+	width:17px;
+	height:21px;
+}
+
+.basicTab_current_left{
+	background-image: url(../../../resources/epui/skins/lightBlue/basicTab/current_left.jpg)!important;
+	width:14px!important;
+}
+.basicTab_current_center{
+	background-image: url(../../../resources/epui/skins/lightBlue/basicTab/current_center.jpg)!important;
+}
+.basicTab_current_middle{
+	background-image: url(../../../resources/epui/skins/lightBlue/basicTab/current_middle.jpg)!important;
+	width:18px!important;
+}
+.basicTab_current_middle2{
+	background-image: url(../../../resources/epui/skins/lightBlue/basicTab/current_middle2.jpg)!important;
+	width:16px!important;
+}
+.basicTab_current_right{
+	background-image: url(../../../resources/epui/skins/lightBlue/basicTab/current_right.jpg)!important;
+	width:14px!important;
+}
+.basicTab_content{
+	padding:3px 0 0 0;
+}
+.basicTab_top .disabled{
+	color:#999999!important;
+	cursor:default!important;
+}
+.basicTab_top a:hover{
+	text-decoration:none;
+}
+/*基本选项卡*/
+
+/*弹出view*/
+.popupView{
+	width: 840px;
+	min-width: 840px;
+	height: 640px;
+	padding: 20px 10px;
+}
+
+/* 添加设备、添加任务、查看任务所有input内容存放区域 */
+.inputFormArea{
+  position: relative;
+  margin: 0 auto 20px;
+}
+
+/* 画面底部按钮区域 */
+.footFnArea{
+  margin-bottom: 20px;
+}
+.footFnArea .btnArea ul{
+  overflow: hidden;
+  text-align: center;
+}
+.footFnArea .btnArea li{
+  display: inline;
+}
+.footFnArea .btnArea .button{
+  margin: 0 5px;
+}
+.footFnArea .btnArea ul:after{display:block;clear:both;content:"";}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+ <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder
+   by default -->
+  <encoder>
+   <pattern>%highlight(%d{HH:mm:ss.SSS} - %-5level - %msg%n)</pattern>
+   <!-- <pattern>%highlight(%d{HH:mm:ss.SSS} - [%logger{15}] %-5level - %msg%n)</pattern> -->
+   <!-- <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{5}
+    - %msg%n%caller</pattern> -->
+  </encoder>
+ </appender>
+
+ <!-- <logger name="com.richfit.report.controller.SbReportingController"
+  level="DEBUG" additivity="false"> <appender-ref ref="STDOUT" /> </logger> -->
+
+ <!-- <logger name="com.richfit.report.controller.ReportingHelper" level="TRACE"
+  additivity="false"> <appender-ref ref="STDOUT" /> </logger> -->
+
+ <!-- TODO: Change `logging.level.root` in application.properties from `info`
+  to `debug` will cause app fail, define `com.richfit` logger and set its level
+  to debug to workaround. -->
+ <logger name="com.richfit" level="debug" additivity="false">
+  <appender-ref ref="STDOUT" />
+ </logger>
+
+ <logger name="com.richfit.scp.privilege.domain" level="error" additivity="false">
+  <appender-ref ref="STDOUT" />
+ </logger>
+
+ <logger name="com.richfit.scp.pc.domain" level="error" additivity="false">
+  <appender-ref ref="STDOUT" />
+ </logger>
+
+ <logger name="com.richfit.scp.privilege.OrgHelper" level="error" additivity="false">
+  <appender-ref ref="STDOUT" />
+ </logger>
+
+ <!-- Strictly speaking, the level attribute is not necessary since -->
+ <!-- the level of the root level is set to DEBUG by default. -->
+ <root level="DEBUG">
+  <appender-ref ref="STDOUT" />
+ </root>
+
+</configuration>

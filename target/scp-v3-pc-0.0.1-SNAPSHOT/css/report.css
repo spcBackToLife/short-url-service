@@ -1,0 +1,681 @@
+@charset "utf-8";
+@import url(comm.css);
+
+/* 报表管理画面样式
+---------------------------------------------------- */
+#pageTop{
+  display: block;
+  height: 26px;
+  padding-top: 10px;
+  color: #ffffff;
+  text-align: center;
+  background-color: #008BBC;
+}
+#reportArea{
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+  min-width: 1080px;
+}
+#reportArea .titleIcon,
+.titleArea .titleIcon{
+  display: block;
+  position: absolute;
+  top: 18px;
+  left: 5px;
+  width: 12px;
+  height: 24px;
+  background-color: #008ABE;
+}
+#reportArea h1,
+.titleArea h1{
+  padding: 0 0 27px 27px;
+  font-size: 24px;
+}
+.autoWidthArea{
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+  width: 1080px;
+  min-width: 1080px;
+}
+.searchArea{
+  position: relative;
+  padding: 0 0 15px 27px;
+}
+.searchArea p,
+.serachArea select,
+.searchArea button{
+  padding: 0 10px;
+  display: inline;
+}
+.moduleArea{
+  overflow: hidden;
+  float: left;
+  position: relative;
+  margin: 10px 5px;
+  width: 526px;
+  height: 260px;
+  border: 2px solid  #EFEFEF;
+}
+.moduleArea h3{
+  /*height: 32px;*/
+  padding: 4px 10px;
+  font-size: 16px;
+  background-color: #efefef;
+}
+.moduleArea .detailLink{
+  position: absolute;
+  top: 3px;
+  right: 17px;
+  font-size: 16px;
+}
+.tableArea:after{display:block;clear:both;content:"";}
+.drawingArea{
+  width: 526px;
+  height: 220px;
+}
+#detailPage .mainArea{
+  position: relative;
+  margin: 0 auto;
+  width: 960px;
+}
+#detailPage .titleArea{
+  padding: 16px 0 0;
+}
+.titleBar{
+  position: relative;
+  border: 1px solid #EFEFEF;
+  margin: 0 5px;
+  font-size: 14px;
+}
+#detailPage .titleBar{
+  overflow: hidden;
+  margin: 0 0 10px;
+}
+.titleBar h3{
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  background-color: #EFEFEF;
+}
+#detailPage .titleBar h3{
+  margin-bottom: 0;
+}
+.titleBar p.desc{
+  padding: 0 24px 8px;
+}
+#detailPage .titleArea .titleIcon{
+  left: 0;
+}
+#detailPage .titleArea h1{
+  padding-left: 30px;
+}
+#detailPage .titleBar .subTxt{
+  position: absolute;
+  top: 5px;
+  right: 24px;
+}
+#detailPage .statisticsArea .countNum{
+  width: 960px;
+  height: 44px;
+}
+.countNum td{
+  text-align: center;
+}
+.countNum td.onlyOneTd{
+  padding-left: 20px;
+  text-align: left;
+}
+.noBorder{
+  border: none;
+}
+.tableStyle{
+  width: 100%;
+  border-left: 1px solid #EFEFEF;
+}
+.tableStyle th{
+  width: 150px;
+}
+.tableStyle th,
+.tableStyle td{
+  padding: 4px 4px;
+  border-right: 1px solid #EFEFEF;
+  border-bottom: 1px solid #EFEFEF;
+  text-align: left;
+  font-weight: normal;
+}
+.tableStyle td p{
+  text-align: center;
+}
+.tableStyle td.spes{
+  width: 130px;
+}
+.tableStyle .scroeShow{
+  padding: 10px 0;
+  font-size: 30px;
+  color: #7BAC42;
+  text-align: center;
+}
+.detailTable{
+  margin-bottom: 10px;
+  border-top: 1px solid #EFEFEF;
+  border-left: 1px solid #EFEFEF;
+}
+.detailTable th{
+  text-align: center;
+  color: #fff;
+  background-color: #008ABE;
+  border-right: 1px solid #008ABE;
+  padding: 5px 0;
+}
+#riskLevelTable .td-checkConfig{
+  width: 127px;
+  text-align: center;
+}
+#riskLevelTable .td-baseLineNum{
+  padding: 0 4px;
+  width: 160px;
+  text-align: left;
+}
+#riskLevelTable .td-desc{
+  position: relative;
+  padding: 4px;
+  width: 422px;
+  text-align: left;
+}
+#riskLevelTable .td-desc img{
+  position: absolute;
+  top: 7px;
+  right: 5px;
+}
+#riskLevelTable .td-riskLevel{
+  width: 69px;
+  text-align: center;
+}
+#riskLevelTable .td-checkFailed{
+  width: 95px;
+  border-right: 1px solid #EFEFEF;
+  text-align: center;
+}
+.detailTable td{
+  height: 24px;
+  border-right: 1px solid #EFEFEF;
+  border-bottom: 1px solid #EFEFEF;
+  text-align: center;
+}
+#riskLevelTable th.td-baseLineNum,
+#riskLevelTable th.td-desc,
+#personListTable th.td-organization{
+  text-align: center;
+}
+td.level-h,
+td.update-new{
+  color: #FC619A;
+}
+td.level-m,
+td.update-unrepair{
+  color: #F5A623;
+}
+td.level-l,
+td.update-repaired{
+  color: #7BAC42;
+}
+#personListTable .td-organization{
+  padding: 0 4px;
+  width: 296px;
+  text-align: left;
+}
+#personListTable .td-name{
+  width: 82px;
+  text-align: center;
+}
+#personListTable .td-desc{
+  width: 290px;
+  text-align: center;
+}
+#personListTable .td-checkCount{
+  width: 83px;
+  text-align: center;
+}
+#personListTable .td-checkOK{
+  width: 63px;
+  text-align: center;
+}
+#personListTable .td-checkTime{
+  width: 135px;
+  border-right: 1px solid #EFEFEF;
+  text-align: center;
+}
+.titleBar .imgArea{
+  float: left;
+  width: 50%;
+  height: 270px;
+}
+.imgArea .drawingArea{
+  width: 420px;
+}
+.titleBar .descArea{
+  float: right;
+  padding: 5px 53px;
+  height: 260px;
+}
+.descArea p{
+  padding: 30px 0 20px;
+  width: 100%;
+  text-align: center;
+}
+.descArea table{
+  border-top: 1px solid #EFEFEF;
+  border-left: 1px solid #EFEFEF;
+}
+.descArea th,
+.descArea td{
+  border-right: 1px solid #EFEFEF;
+  border-bottom: 1px solid #EFEFEF;
+}
+.descArea th{
+  width: 100px;
+  height: 27px;
+  text-align: center;
+  background-color: #F6F6F6;
+}
+.descArea td{
+  height: 104px;
+  text-align: center;
+  font-size: 48px;
+  background-color: #fff;
+}
+.descArea .add{
+  color: #F5A623;
+}
+.descArea .repair{
+  color: #7BAC42;
+}
+.descArea .checkTime{
+  padding: 0;
+  color: #9B9B9B;
+  font-size: 12px;
+  text-align: right;
+}
+#riskLevelTable .td-checkResult-yes{
+  width: 90px;
+  border-right: 1px solid #EFEFEF;
+  text-align: center;
+  color: #7BAC42;
+}
+#riskLevelTable .td-checkResult-no{
+  width: 90px;
+  border-right: 1px solid #EFEFEF;
+  text-align: center;
+  color: #FC619A;
+}
+#reportArea .scoreArea{
+  position: absolute;
+  top: -18px;
+  right: 27px;
+}
+#reportArea .scoreArea b{
+  font-size: 36px;
+  color: #7BAC42;
+}
+.drawingArea table{
+  margin: 20px 20px 30px;
+  border-top: 1px solid #EFEFEF;
+  border-left:  1px solid #EFEFEF;
+}
+.drawingArea th{
+  width: 120px;
+  height: 28px;
+  border-right: 1px solid #EFEFEF;
+  border-bottom:  1px solid #EFEFEF;
+  text-align: center;
+  background-color: #F6F6F6;
+}
+.drawingArea td{
+  width: 120px;
+  height: 106px;
+  border-right: 1px solid #EFEFEF;
+  border-bottom:  1px solid #EFEFEF;
+  text-align: center;
+  font-size: 32px;
+}
+.drawingArea ul{
+  margin-left: 20px;
+  color: #9B9B9B;
+}
+.drawingArea li{
+  height: 18px;
+  line-height: 18px;
+}
+.drawingArea .green{
+  color: #7BAC42;
+}
+.drawingArea .orange{
+  color: #F5A623;
+}
+.drawingArea .pink{
+  color: #FC619A;
+}
+#baseLineTable th,
+#baseLineTable th.td-desc{
+  text-align: center;
+}
+#baseLineTable td{
+  padding: 0 4px;
+}
+#baseLineTable .td-checkConfig{
+  width: 120px;
+}
+#baseLineTable .td-desc{
+  position: relative;
+  padding-right: 63px;
+  width: 500px;
+  text-align: left;
+}
+#baseLineTable .td-detail{
+  width: 45px;
+}
+#baseLineTable .td-riskLevel{
+  width: 90px;
+}
+#baseLineTable .td-checkFailed{
+  width: 100px;
+}
+#baseLineTable .td-desc img {
+    position: absolute;
+    top: 4px;
+    right: 5px;
+}
+.detailInfoArea{
+  display: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+}
+.detailInfoArea .descShow{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -430px;
+  margin-top: -220px;
+  padding: 20px 10px;
+  width: 840px;
+  height: 400px;
+  background-color: #FCFCFC;
+}
+.descShow .countNum{
+  width: 100%;
+}
+.detailInfoArea .countNum td{
+  text-align: left;
+  padding: 0 24px;
+}
+#baseLineDesTable th,
+#baseLineDesTable th.td-checkPoint,
+#baseLineDesTable th.td-matchRule,
+#baseLineDesTable th.td-configMethod{
+  text-align: center;
+}
+#baseLineDesTable td{
+  padding: 0 4px;
+  word-break: break-all;
+}
+#baseLineDesTable .td-number{
+  width: 34px;
+}
+#baseLineDesTable .td-checkPoint{
+  width: 198px;
+  text-align: left;
+}
+#baseLineDesTable .td-activeNum{
+  width: 67px;
+}
+#baseLineDesTable .td-matchRule{
+  width: 90px;
+  text-align: left;
+}
+#baseLineDesTable .td-standardValue{
+  width: 79px;
+}
+#baseLineDesTable .td-configMethod{
+  width: 293px;
+  text-align: left;
+}
+#baseLineDesTable .td-checkRsult{
+  width: 60px;
+}
+#baseLineDesTable td.td-checkRsult{
+  color: #FC619A;
+}
+.detailInfoArea .scrollArea{
+  overflow-y: auto;
+  margin-bottom: 20px;
+  width: 100%;
+  height: 266px;
+}
+#baselinePersonTable td{
+  padding: 4px;
+}
+#baselinePersonTable .td-organization{
+  width: 245px;
+}
+#baselinePersonTable td.td-organization{
+  text-align: left;
+}
+#baselinePersonTable .td-ip{
+  width: 120px;
+}
+#baselinePersonTable .td-desc{
+  width: 200px;
+}
+#baselinePersonTable .td-checkCount{
+  width: 77px;
+}
+#baselinePersonTable .td-checkOK{
+  width: 56px;
+}
+#baselinePersonTable .td-checkTime{
+  width: 161px;
+}
+#baselinePersonTable .td-detail{
+  width: 36px;
+}
+#loopholeScanTable td{
+  text-align: left;
+}
+#loopholeScanTable .td-cveNum{
+  width: 201px;
+}
+#loopholeScanTable .td-name{
+  width: 560px;
+}
+#loopholeScanTable .td-info{
+  width: 40px;
+  text-align: center;
+}
+#loopholeScanTable .td-level{
+  width: 46px;
+  text-align: center;
+}
+#loopholeScanTable .td-sum{
+  width: 68px;
+  text-align: center;
+}
+#loopholeInfoTable th{
+  width: 86px;
+  border-right: 1px solid #EFEFEF;
+  background: none;
+  color: #4A4A4A;
+  font-weight: bold;
+}
+#loopholeInfoTable td{
+  width: 743px;
+  text-align: left;
+}
+.detailInfoArea .noDes{
+  height: 320px;
+}
+/* ------------ 漏扫整改详情列表 ------------- */
+#loopholeRectifyTable td.td-name{
+  width: 679px;
+  text-align: left;
+}
+#loopholeRectifyTable .td-level{
+  width: 48px;
+}
+#loopholeRectifyTable .td-info{
+  width: 40px;
+}
+#loopholeRectifyTable .td-kind{
+  width: 46px;
+}
+#loopholeRectifyTable .td-num-new{
+  width: 46px;
+}
+#loopholeRectifyTable .td-num-required{
+  width: 46px;
+}
+#loopholeRectifyTable .td-num-unrequir{
+  width: 46px;
+}
+/* ------------ 基线核查整改详情列表 ------------- */
+#baselineRectifyTable .td-kind{
+  width: 46px;
+}
+#baselineRectifyTable td.td-name{
+  width: 390px;
+  text-align: left;
+}
+#baselineRectifyTable .td-info{
+  width: 40px;
+}
+#baselineRectifyTable .td-level{
+  width: 46px;
+}
+#baselineRectifyTable .td-num-new{
+  width: 46px;
+}
+#baselineRectifyTable .td-num-required{
+  width: 46px;
+}
+#baselineRectifyTable .td-num-unrequir{
+  width: 46px;
+}
+.showPopTable tbody tr:hover,
+.showPopTable tbody tr:active,
+.showPopTable tbody tr:focus{
+  background-color: #FCF7E9;
+  text-decoration: none;
+}
+#perRiskRectifyTable .td-checkConfig{
+  width: 100px;
+}
+#perRiskRectifyTable .td-baseLineNum{
+  width: 160px;
+}
+#perRiskRectifyTable td.td-desc{
+  width: 339px;
+  text-align: left;
+}
+#perRiskRectifyTable .td-riskLevel{
+  width: 69px;
+}
+#perRiskRectifyTable .td-num-new{
+  width: 46px;
+}
+#perRiskRectifyTable .td-num-required{
+  width: 46px;
+}
+#perRiskRectifyTable .td-num-unrequir{
+  width: 46px;
+}
+
+/* ------------ 覆盖原有框架样式 ------------- */
+.basicTab_con {
+  border-top: 1px solid #80c0e7;
+  border-right: none;
+  border-bottom: none;
+  border-left: none;
+  padding: 15px 0 0;
+}
+.inputArea{
+  width: 100%;
+  padding-top: 10px;
+}
+.inputArea label{
+  display: block;
+  float: left;
+  padding: 0 10px;
+}
+.mainCon{
+  float: left;
+  position: relative;
+  padding-right: 10px;
+}
+.inputArea input{
+  float: left;
+  position: relative;
+  padding-right: 10px;
+}
+.inputArea .button{
+  float: left;
+}
+
+.inputArea:after{display:block;clear:both;content:"";}
+
+
+
+
+/* 导出报告 */
+
+.drawingArea .leftArea {
+    float: left;
+    margin: 10px 31px;
+    width: 200px;
+    height: 200px;
+}
+
+.drawingArea .rightArea {
+    float: right;
+    margin: 10px 10px 31px 0;
+    width: 200px;
+    height: 200px;
+}
+
+.drawingArea .rightArea .intro {
+    height: 164px;
+    line-height: 28px;
+    color: #777777;
+    font-size: 14px;
+}
+
+.drawingArea .rightArea .linkOpen {
+    height: 40px;
+    text-align: center;
+}
+
+.drawingArea .rightArea .linkOpen a {
+    padding: 10px 20px;
+    line-height: 36px;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #008ABE;
+}
+.drawingArea .rightArea .linkOpen input {
+    padding: 10px 20px;
+    line-height: 36px;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #008ABE;
+}
+
+.drawingArea .rightArea .linkOpen span {
+    padding: 10px 20px;
+    line-height: 36px;
+    font-size: 14px;
+    color: #ffffff;
+    cursor:hand;
+    background-color: #008ABE;
+}

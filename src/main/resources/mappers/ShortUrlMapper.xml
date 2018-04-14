@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pk.shorturl.dao.ShortUrlDao">
+<insert id="addDefaultLinks"  parameterType="com.pk.shorturl.model.Link">   
+      INSERT INTO links (url,type,insert_at) VALUES (#{longUrl},#{type},unix_timestamp(now()))
+      <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
+	      SELECT LAST_INSERT_ID()  AS id
+	   </selectKey> 
+</insert>
+<insert id="addCustomLinks"  parameterType="com.pk.shorturl.model.Link">   
+      INSERT INTO links (url,type,short_url,insert_at) VALUES (#{longUrl},#{type},#{shortUrl},unix_timestamp(now()))
+</insert>
+<update id="updateLinks" >
+      UPDATE links SET short_url = #{shortUrl},updated_at =unix_timestamp(now())  WHERE id = #{id}
+</update>
+<update id="updateLinkCount">
+   UPDATE links SET count = count + 1 WHERE short_url=#{shortUrl}
+</update>
+<select id="getLongUrl" resultType="String">
+      SELECT url AS longUrl FROM links WHERE short_url=#{shortUrl}
+</select>
+<select id="checkShortUrl" resultType="java.lang.Integer">
+      SELECT id FROM links WHERE short_url=#{shortUrl}
+</select>
+</mapper>

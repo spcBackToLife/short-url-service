@@ -1,0 +1,229 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.richfit.scp.pc.domain.CheckMapper">
+		<select id="getCheck" resultType="hashmap">
+				SELECT
+				c.*,
+				c.`用户姓名` user_name,
+				g.ORG_NAME org_name,
+				CONCAT(FORMAT(100 * c.score,
+				2), '%')
+				score_format,
+				c.`检查时间` check_time,
+				(SELECT
+				COUNT(t.id)
+				FROM
+				rf_base_client t
+				WHERE
+				t.per_dev_id = c.per_dev_id and t.`用户单位` = c.`用户单位`
+				AND t.delete_flag =
+				'0') check_num,
+				IF(c.`密码复杂性` = '不合规',
+				1,
+				0) + IF(c.`远程强制关机` = '不合规',
+				1,
+				0) + IF(c.`文件所有权` = '不合规',
+				1,
+				0) + IF(c.`审核账户管理` = '不合规',
+				1,
+				0) +
+				IF(c.`系统自动播放` = '不合规',
+				1,
+				0) + IF(c.`VRV是否运行` = '不合规',
+				1,
+				0) +
+				IF(c.`SEP是否运行` = '不合规',
+				1,
+				0) high,
+				IF(c.`密码最长使用期限` = '不合规',
+				1,
+				0) +
+				IF(c.`强制密码历史` = '不合规',
+				1,
+				0) + IF(c.`账户锁定阙值` = '不合规',
+				1,
+				0) +
+				IF(c.`防火墙状态` = '不合规',
+				1,
+				0) + IF(c.`磁盘默认共享` = '不合规',
+				1,
+				0) low,
+				IF(c.`重命名管理员账户` = '不合规',
+				1,
+				0) + IF(c.`禁用来宾账户` = '不合规',
+				1,
+				0) +
+				IF(c.`密码长度` = '不合规', 1, 0) + IF(c.`审核登陆事件` = '不合规',
+				1,
+				0) +
+				IF(c.`审核策略更改` = '不合规',
+				1,
+				0) + IF(c.`审核对象访问` = '不合规',
+				1,
+				0) +
+				IF(c.`审核目录访问` = '不合规',
+				1,
+				0) + IF(c.`审核特权使用` = '不合规',
+				1,
+				0) +
+				IF(c.`审核系统事件` = '不合规',
+				1,
+				0) + IF(c.`审核过程追踪` = '不合规',
+				1,
+				0) +
+				IF(c.`审核日志容量` = '不合规',
+				1,
+				0) + IF(c.`远程协助` = '不合规', 1, 0) +
+				IF(c.`远程桌面` = '不合规', 1, 0) mid,
+				IF(c.`密码复杂性` = '未检查',
+				1,
+				0) +
+				IF(c.`远程强制关机` = '未检查',
+				1,
+				0) + IF(c.`文件所有权` = '未检查',
+				1,
+				0) +
+				IF(c.`审核账户管理` = '未检查',
+				1,
+				0) + IF(c.`系统自动播放` = '未检查',
+				1,
+				0) +
+				IF(c.`VRV是否运行` = '未检查',
+				1,
+				0) + IF(c.`SEP是否运行` = '未检查',
+				1,
+				0) +
+				IF(c.`密码最长使用期限` = '未检查',
+				1,
+				0) + IF(c.`强制密码历史` = '未检查',
+				1,
+				0) +
+				IF(c.`账户锁定阙值` = '未检查',
+				1,
+				0) + IF(c.`防火墙状态` = '未检查',
+				1,
+				0) +
+				IF(c.`磁盘默认共享` = '未检查',
+				1,
+				0) + IF(c.`重命名管理员账户` = '未检查',
+				1,
+				0) +
+				IF(c.`禁用来宾账户` = '未检查',
+				1,
+				0) + IF(c.`密码长度` = '未检查', 1, 0) +
+				IF(c.`审核登陆事件` = '未检查',
+				1,
+				0) + IF(c.`审核策略更改` = '未检查',
+				1,
+				0) +
+				IF(c.`审核对象访问` = '未检查',
+				1,
+				0) + IF(c.`审核目录访问` = '未检查',
+				1,
+				0) +
+				IF(c.`审核特权使用` = '未检查',
+				1,
+				0) + IF(c.`审核系统事件` = '未检查',
+				1,
+				0) +
+				IF(c.`审核过程追踪` = '未检查',
+				1,
+				0) + IF(c.`审核日志容量` = '未检查',
+				1,
+				0) +
+				IF(c.`远程协助` = '未检查', 1, 0) + IF(c.`远程桌面` = '未检查', 1, 0) +
+				IF(c.`关闭系统授权` = '未检查',
+				1,
+				0) + IF(c.`SYN攻击保护` = '未检查',
+				1,
+				0) +
+				IF(c.`网络服务器挂起时间` = '未检查',
+				1,
+				0) + IF(c.`禁止自动登录` = '未检查',
+				1,
+				0) +
+				IF(c.`源路由欺骗保护` = '未检查',
+				1,
+				0) + IF(c.`匿名空连接` = '未检查',
+				1,
+				0) +
+				IF(c.`碎片攻击保护` = '未检查',
+				1,
+				0) miss
+				FROM
+				rf_base_client c
+				LEFT JOIN
+				p_auth_org g ON c.`用户单位` = g.ORG_ID
+				WHERE
+				c.delete_flag = 0
+				AND c.id =
+				#{id}
+		</select>
+		<select id="getTrend" resultType="hashmap">
+				SELECT
+				FORMAT(SUM(t.score) * 100, 2) total_score,
+				COUNT(t.id)
+				check_num,
+				COUNT(t.per_dev_id)
+				dev_num,
+				FORMAT(100 * SUM(t.score) /
+				COUNT(t.id),
+				2) score,
+				t.check_date
+				FROM
+				(SELECT
+				c.id,
+				c.per_dev_id,
+				c.score,
+				c.`用户单位` org,
+				DATE_FORMAT(c.`检查时间`, '%Y%m') check_date
+				FROM
+				rf_base_client c
+				WHERE
+				0 = 0 AND c.delete_flag = 0
+				AND c.`用户单位` IN
+				<foreach close=")" collection="org_ids" index="index" item="org_id"
+						open="(" separator=",">#{org_id}</foreach>
+				AND c.per_dev_id = #{device_id}
+				AND (SELECT
+				s.`检查时间`
+				FROM
+				rf_base_client s
+				WHERE
+				s.id = #{check_id}) >= c.`检查时间`) t
+				WHERE
+				0 = 0
+				AND FIND_IN_SET(t.check_date, #{months})
+				GROUP BY t.check_date
+				ORDER
+				BY
+				t.check_date
+		</select>
+		<select id="getLastTwoChecks" resultType="hashmap">
+				SELECT c.* FROM  rf_base_client c
+                     WHERE
+                       c.delete_flag = 0
+                       AND c.id = #{check_id}
+                      AND per_dev_id=#{device_id}
+            UNION ALL
+             select a.* from (
+                     select c.* from rf_base_client c where c.delete_flag = 0
+					   AND per_dev_id=#{device_id}
+                       AND c.`检查时间` &lt;  (SELECT c.`检查时间` FROM  rf_base_client c
+                     WHERE
+                       c.delete_flag = 0
+                       AND c.id = #{check_id}
+                      AND per_dev_id=#{device_id}
+	                 AND c.`用户单位` IN
+				           <foreach close=")" collection="org_ids" index="index" item="org_id"
+					 open="(" separator=",">#{org_id}</foreach>
+                    )order by id desc LIMIT 1) a
+		</select>
+		<select id="getItemTypes" resultType="hashmap">
+				select DISTINCT(c.Sgid) type from rf_base_securitylist c
+		</select>
+		<select id="getItemsWithType" resultType="hashmap">
+				select c.Slname item ,c.Sgid type from rf_base_securitylist c
+		</select>
+</mapper>

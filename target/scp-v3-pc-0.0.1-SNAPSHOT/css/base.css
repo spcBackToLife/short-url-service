@@ -1,0 +1,64 @@
+@charset "utf-8";
+
+/* base - 初始化基础样式保证各浏览器统一性
+---------------------------------------------------- */
+html{
+font-family: Arial, sans-serif, SimSun, 微软雅黑;
+font-size: 12px;
+line-height: 200%;
+color: #4A4A4A;
+}
+header,footer,article,section,nav,aside,small,hgroup{
+display:block;
+}
+h1, h2, h3, h4, h5, h6 {
+margin: 0;
+padding:0;
+font-size:100%;
+}
+p {
+margin: 0;
+}
+ol, ul, li{
+list-style: none;
+margin: 0;
+padding: 0;
+}
+dl, dt, dd{
+margin: 0;
+}
+img{
+border: 0;
+vertical-align: baseline;
+}
+a:link{
+color: #008BBC;
+text-decoration: none;
+}
+a:visited{
+color: #008BBC;
+text-decoration: none;
+}
+a:hover,
+a:active,
+a:focus{
+text-decoration: underline;
+}
+body,form{
+position: relative;
+margin: 0;
+padding: 0;
+min-width: 960px;
+}
+input,textarea,select,button{
+font-family: Arial, sans-serif, SimSun, 微软雅黑;
+font-size: 12px;
+color: #666;
+}
+label{
+cursor: pointer;
+}
+table{
+margin: 0;
+padding:0;
+}

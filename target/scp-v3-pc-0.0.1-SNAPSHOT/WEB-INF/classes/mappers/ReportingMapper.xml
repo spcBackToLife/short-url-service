@@ -1,0 +1,851 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.richfit.scp.pc.domain.ReportingMapper">
+
+		<select id="getOSTypeNum" resultType="hashmap">
+			SELECT 
+			   count(c.per_dev_id) value,c.os_type name 
+			FROM 
+				(
+				  SELECT t.* FROM
+				      rf_base_client t,
+				      (SELECT max(c.`检查时间`) maxt_date,
+				              c.per_dev_id 
+				       FROM rf_base_client c
+				       WHERE c.delete_flag = '0'
+				          AND c.`检查时间` 
+				          BETWEEN #{fromDate} AND #{toDate}
+		                  <if test="orgIds != null">
+							 AND c.`用户单位` in
+							 <foreach close=")" collection="orgIds" index="index" item="orgId"
+									open="(" separator=",">#{orgId}
+							 </foreach>
+						  </if>
+				     GROUP BY c.per_dev_id,c.`用户单位`
+				       ) c
+				   WHERE  t.`检查时间` = c.maxt_date
+				       AND t.per_dev_id = c.per_dev_id
+					   AND t.`检查时间` BETWEEN #{fromDate} AND #{toDate}
+					   AND t.delete_flag = '0') c
+		  WHERE c.delete_flag = '0'
+				AND c.`检查时间` BETWEEN #{fromDate} AND #{toDate}
+				GROUP BY c.os_type  
+		</select>
+		<select id="getRiskAndPassedInfo" resultType="hashmap">
+			SELECT sum(t.passedNum) passed_num,
+			       sum(t.high) high,
+			       sum(t.low) low,
+			       sum(t.mid) mid,
+			       count(t.id) dev_num,
+		           sum(t.miss) miss,
+		           sum(t.`总检查数`) total,
+		           sum(t.`总检查数`)-sum(t.passedNum) no_passed_num,
+		           max(t.`检查时间`) last_check_date 
+		    FROM (
+		      SELECT c.*,
+				IF(c.`密码复杂性`='不合规',1,0)+
+				IF(c.`远程强制关机`='不合规',1,0)+
+				IF(c.`文件所有权`='不合规',1,0)+
+				IF(c.`审核账户管理`='不合规',1,0)+
+				IF(c.`系统自动播放`='不合规',1,0)+
+				IF(c.`VRV是否运行`='不合规',1,0)+
+				IF(c.`360天擎是否运行`='不合规',1,0)+
+				IF(c.`SEP是否运行`='不合规',1,0) high,
+				IF(c.`密码最长使用期限`='不合规',1,0)+
+				IF(c.`强制密码历史`='不合规',1,0)+
+				IF(c.`账户锁定阙值`='不合规',1,0)+
+				IF(c.`防火墙状态`='不合规',1,0)+
+				IF(c.`磁盘默认共享`='不合规',1,0) low,
+				IF(c.`重命名管理员账户`='不合规',1,0)+
+				IF(c.`禁用来宾账户`='不合规',1,0)+
+				IF(c.`密码长度`='不合规',1,0)+
+				IF(c.`审核登陆事件`='不合规',1,0)+
+				IF(c.`审核策略更改`='不合规',1,0)+
+				IF(c.`审核对象访问`='不合规',1,0)+
+				IF(c.`审核目录访问`='不合规',1,0)+
+				IF(c.`审核特权使用`='不合规',1,0)+
+				IF(c.`审核系统事件`='不合规',1,0)+
+				IF(c.`审核过程追踪`='不合规',1,0)+
+				IF(c.`审核日志容量`='不合规',1,0)+
+				IF(c.`远程协助`='不合规',1,0)+
+				IF(c.`远程桌面`='不合规',1,0) mid,
+				
+				IF(c.`密码复杂性`='未检查',1,0)+
+				IF(c.`远程强制关机`='未检查',1,0)+
+				IF(c.`文件所有权`='未检查',1,0)+
+				IF(c.`审核账户管理`='未检查',1,0)+
+				IF(c.`系统自动播放`='未检查',1,0)+
+				IF(c.`VRV是否运行`='未检查',1,0)+
+				IF(c.`360天擎是否运行`='未检查',1,0)+
+				IF(c.`SEP是否运行`='未检查',1,0) +
+				IF(c.`密码最长使用期限`='未检查',1,0)+
+				IF(c.`强制密码历史`='未检查',1,0)+
+				IF(c.`账户锁定阙值`='未检查',1,0)+
+				IF(c.`防火墙状态`='未检查',1,0)+
+				IF(c.`磁盘默认共享`='未检查',1,0) +
+				IF(c.`重命名管理员账户`='未检查',1,0)+
+				IF(c.`禁用来宾账户`='未检查',1,0)+
+				IF(c.`密码长度`='未检查',1,0)+
+				IF(c.`审核登陆事件`='未检查',1,0)+
+				IF(c.`审核策略更改`='未检查',1,0)+
+				IF(c.`审核对象访问`='未检查',1,0)+
+				IF(c.`审核目录访问`='未检查',1,0)+
+				IF(c.`审核特权使用`='未检查',1,0)+
+				IF(c.`审核系统事件`='未检查',1,0)+
+				IF(c.`审核过程追踪`='未检查',1,0)+
+				IF(c.`审核日志容量`='未检查',1,0)+
+				IF(c.`远程协助`='未检查',1,0)+
+				IF(c.`远程桌面`='未检查',1,0)+
+				IF(c.`关闭系统授权`='未检查',1,0)+
+				IF(c.`SYN攻击保护`='未检查',1,0)+
+				IF(c.`网络服务器挂起时间`='未检查',1,0)+
+				IF(c.`禁止自动登录`='未检查',1,0)+
+				IF(c.`源路由欺骗保护`='未检查',1,0)+
+				IF(c.`匿名空连接`='未检查',1,0)+
+				IF(c.`碎片攻击保护`='未检查',1,0)
+				 miss
+				FROM 
+				  (SELECT t.* 
+				     FROM rf_base_client t,
+				     (SELECT max(c.`检查时间`) maxt_date,
+				             c.per_dev_id 
+				      FROM rf_base_client c
+		              WHERE c.delete_flag = '0'
+			          AND c.`检查时间` BETWEEN  #{fromDate} AND #{toDate}
+					<if test="orgIds != null">
+					  AND c.`用户单位` in
+						<foreach close=")" collection="orgIds" index="index" item="orgId"
+							open="(" separator=",">#{orgId}
+						</foreach>
+					</if>
+		   GROUP BY c.per_dev_id,c.`用户单位`) c
+		   WHERE  t.`检查时间` = c.maxt_date
+		      AND t.`检查时间` BETWEEN  #{fromDate} AND #{toDate}
+		      AND t.per_dev_id = c.per_dev_id
+		      AND t.delete_flag = '0')  c 
+		)  t
+		WHERE t.delete_flag = '0'
+		</select>
+		<select id="getLastTwoRecords" resultType="hashmap">
+		    SELECT t.*,g.ORG_NAME FROM (
+		       SELECT '1' sequence, c.* 
+		       FROM rf_base_client c ,
+		      (
+			   SELECT c.per_dev_id, 
+			          max(c.`检查时间`) max_date from
+			          rf_base_client c 
+			   WHERE c.delete_flag = '0'		 
+			      <if test="orgIds != null">
+			         AND c.`用户单位` in
+				      <foreach close=")" collection="orgIds" index="index" item="orgId"
+				          open="(" separator=",">#{orgId}
+				      </foreach>
+			       </if>
+			         AND c.`检查时间` BETWEEN #{fromDate} and #{toDate}
+			  GROUP BY c.per_dev_id
+		      ) m
+			 WHERE c.delete_flag = '0'
+			   AND c.per_dev_id = m.per_dev_id 
+			   AND c.`检查时间` = m.max_date
+		       AND ( SELECT count(*) from rf_base_client t 
+		             WHERE t.delete_flag='0' 
+			   AND c.per_dev_id = t.per_dev_id 
+			   AND c.id != t.id 
+			   AND c.`检查时间` > t.`检查时间`
+				  <if test="orgIds != null">
+				      AND t.`用户单位` in
+				      <foreach close=")" collection="orgIds" index="index" item="orgId"
+				          open="(" separator=",">#{orgId}
+				      </foreach>
+				  </if>
+               AND t.`检查时间` BETWEEN #{fromDate} AND #{toDate}
+	     	 ) >0
+		
+		UNION ALL
+		  SELECT '2' sequence, 
+		          c.* 
+		  FROM rf_base_client c
+		  WHERE c.delete_flag = '0'
+		  AND ( SELECT count(*) 
+		        FROM rf_base_client t 
+		        WHERE t.delete_flag='0'
+			    AND c.per_dev_id = t.per_dev_id 
+			    AND c.id != t.id 
+			    AND  t.`检查时间`> c.`检查时间`  
+		       <if test="orgIds != null">
+		           AND t.`用户单位` in
+		           <foreach close=")" collection="orgIds" index="index" item="orgId"
+		               open="(" separator=",">#{orgId}
+		           </foreach>
+		       </if>
+               AND t.`检查时间` BETWEEN #{fromDate} AND #{toDate}
+		  ) =1
+	    <if test="orgIds != null">
+	        AND c.`用户单位` in
+	        <foreach close=")" collection="orgIds" index="index" item="orgId"
+	            open="(" separator=",">#{orgId}</foreach>
+	    </if>
+        AND c.`检查时间` BETWEEN #{fromDate} AND #{toDate}
+		
+		) t,
+		p_auth_org g
+		WHERE t.`用户单位`= g.ORG_ID
+		ORDER BY  t.per_dev_id,t.sequence
+		</select>
+
+		<select id="getCheckType" resultType="hashmap">
+				SELECT DISTINCT(c.Sgid)
+				type FROM rf_base_securitylist c
+		</select>
+		<select id="getRelationShip" resultType="hashmap">
+				select c.Slname item
+				,c.Sgid type from rf_base_securitylist c
+		</select>
+		<select id="getCheckInfoGroupByMonth" resultType="hashmap">
+				select format(sum(t.score)*100,2) total_score ,
+				COUNT(t.id) check_num ,
+				count(t.per_dev_id) dev_num,
+				FORMAT(100*sum(t.score)/COUNT(t.id),2) score,
+				t.check_date from (
+				select c.id, c.per_dev_id, c.score,c.`用户单位` org,DATE_FORMAT(c.`检查时间`
+				,'%Y%m') check_date
+				from
+				(select t.* from rf_base_client t,(select max(c.`检查时间`)
+				maxt_date,c.per_dev_id from rf_base_client c
+				where c.delete_flag = '0'
+				<if test="orgIds != null">
+						and c.`用户单位` in
+						<foreach close=")" collection="orgIds" index="index" item="orgId"
+								open="(" separator=",">#{orgId}</foreach>
+				</if>
+				and c.`检查时间` &lt; #{ltMonth[0]}
+				group by c.per_dev_id,c.`用户单位`) c
+				where t.`检查时间` = c.maxt_date
+				and t.per_dev_id = c.per_dev_id
+				and t.delete_flag = '0') c) t
+				where 0 = 0
+				and t.check_date = replace(#{fromMonth[0]}, "-", "")
+				group by t.check_date
+				union all 
+				
+				select format(sum(t.score)*100,2) total_score ,
+				COUNT(t.id) check_num ,
+				count(t.per_dev_id) dev_num,
+				FORMAT(100*sum(t.score)/COUNT(t.id),2) score,
+				t.check_date from (
+				select c.id, c.per_dev_id, c.score,c.`用户单位` org,DATE_FORMAT(c.`检查时间`
+				,'%Y%m') check_date
+				from
+				(select t.* from rf_base_client t,(select max(c.`检查时间`)
+				maxt_date,c.per_dev_id from rf_base_client c
+				where c.delete_flag = '0'
+				<if test="orgIds != null">
+						and c.`用户单位` in
+						<foreach close=")" collection="orgIds" index="index" item="orgId"
+								open="(" separator=",">#{orgId}</foreach>
+				</if>
+				and c.`检查时间` &lt; #{ltMonth[1]}
+				group by c.per_dev_id,c.`用户单位`) c
+				where t.`检查时间` = c.maxt_date
+				and t.per_dev_id = c.per_dev_id
+				and t.delete_flag = '0') c) t
+				where 0 = 0
+				and t.check_date = replace(#{fromMonth[1]}, "-", "")
+				group by t.check_date
+			
+				union all 
+				select format(sum(t.score)*100,2) total_score ,
+				COUNT(t.id) check_num ,
+				count(t.per_dev_id) dev_num,
+				FORMAT(100*sum(t.score)/COUNT(t.id),2) score,
+				t.check_date from (
+				select c.id, c.per_dev_id, c.score,c.`用户单位` org,DATE_FORMAT(c.`检查时间`
+				,'%Y%m') check_date
+				from
+				(select t.* from rf_base_client t,(select max(c.`检查时间`)
+				maxt_date,c.per_dev_id from rf_base_client c
+				where c.delete_flag = '0'
+				<if test="orgIds != null">
+						and c.`用户单位` in
+						<foreach close=")" collection="orgIds" index="index" item="orgId"
+								open="(" separator=",">#{orgId}</foreach>
+				</if>
+				and c.`检查时间` &lt; #{ltMonth[2]}
+				group by c.per_dev_id,c.`用户单位`) c
+				where t.`检查时间` = c.maxt_date
+				and t.per_dev_id = c.per_dev_id
+				and t.delete_flag = '0') c) t
+				where 0 = 0
+				and t.check_date = replace(#{fromMonth[2]}, "-", "")
+				group by t.check_date
+				
+				union all 
+				
+				select format(sum(t.score)*100,2) total_score ,
+				COUNT(t.id) check_num ,
+				count(t.per_dev_id) dev_num,
+				FORMAT(100*sum(t.score)/COUNT(t.id),2) score,
+				t.check_date from (
+				select c.id, c.per_dev_id, c.score,c.`用户单位` org,DATE_FORMAT(c.`检查时间`
+				,'%Y%m') check_date
+				from
+				(select t.* from rf_base_client t,(select max(c.`检查时间`)
+				maxt_date,c.per_dev_id from rf_base_client c
+				where c.delete_flag = '0'
+				<if test="orgIds != null">
+						and c.`用户单位` in
+						<foreach close=")" collection="orgIds" index="index" item="orgId"
+								open="(" separator=",">#{orgId}</foreach>
+				</if>
+				and c.`检查时间` &lt; #{ltMonth[3]}
+				group by c.per_dev_id,c.`用户单位`) c
+				where t.`检查时间` = c.maxt_date
+				and t.per_dev_id = c.per_dev_id
+				and t.delete_flag = '0') c) t
+				where 0 = 0
+				and t.check_date = replace(#{fromMonth[3]}, "-", "")
+				group by t.check_date
+				
+				union all 
+				
+				select format(sum(t.score)*100,2) total_score ,
+				COUNT(t.id) check_num ,
+				count(t.per_dev_id) dev_num,
+				FORMAT(100*sum(t.score)/COUNT(t.id),2) score,
+				t.check_date from (
+				select c.id, c.per_dev_id, c.score,c.`用户单位` org,DATE_FORMAT(c.`检查时间`
+				,'%Y%m') check_date
+				from
+				(select t.* from rf_base_client t,(select max(c.`检查时间`)
+				maxt_date,c.per_dev_id from rf_base_client c
+				where c.delete_flag = '0'
+				<if test="orgIds != null">
+						and c.`用户单位` in
+						<foreach close=")" collection="orgIds" index="index" item="orgId"
+								open="(" separator=",">#{orgId}</foreach>
+				</if>
+				and c.`检查时间` &lt; #{ltMonth[4]}
+				group by c.per_dev_id,c.`用户单位`) c
+				where t.`检查时间` = c.maxt_date
+				and t.per_dev_id = c.per_dev_id
+				and t.delete_flag = '0') c) t
+				where 0 = 0
+				and t.check_date = replace(#{fromMonth[4]}, "-", "")
+				group by t.check_date
+				union all 
+				
+				select format(sum(t.score)*100,2) total_score ,
+				COUNT(t.id) check_num ,
+				count(t.per_dev_id) dev_num,
+				FORMAT(100*sum(t.score)/COUNT(t.id),2) score,
+				t.check_date from (
+				select c.id, c.per_dev_id, c.score,c.`用户单位` org,DATE_FORMAT(c.`检查时间`
+				,'%Y%m') check_date
+				from
+				(select t.* from rf_base_client t,(select max(c.`检查时间`)
+				maxt_date,c.per_dev_id from rf_base_client c
+				where c.delete_flag = '0'
+				<if test="orgIds != null">
+						and c.`用户单位` in
+						<foreach close=")" collection="orgIds" index="index" item="orgId"
+								open="(" separator=",">#{orgId}</foreach>
+				</if>
+				and c.`检查时间` &lt; #{ltMonth[5]}
+				group by c.per_dev_id,c.`用户单位`) c
+				where t.`检查时间` = c.maxt_date
+				and t.per_dev_id = c.per_dev_id
+				and t.delete_flag = '0') c) t
+				where 0 = 0
+				and t.check_date = replace(#{fromMonth[5]}, "-", "")
+				group by t.check_date
+		</select>
+
+		<select id="getOrgDevNum" resultType="Long">
+				select 
+					count(per_dev_id) dev_num
+					from rf_base_client
+					where delete_flag = '0'
+					and `检查时间`  &lt; #{ltMonth[0]} 
+				union all
+				select 
+					count(per_dev_id) dev_num
+					from rf_base_client
+					where delete_flag = '0'
+					and `检查时间`  &lt; #{ltMonth[1]} 
+				union all
+				select 
+					count(per_dev_id) dev_num
+					from rf_base_client
+					where delete_flag = '0'
+					and `检查时间`  &lt; #{ltMonth[2]} 
+				union all
+				select 
+					count(per_dev_id) dev_num
+					from rf_base_client
+					where delete_flag = '0'
+					and `检查时间`  &lt; #{ltMonth[3]} 
+				union all
+				select 
+					count(per_dev_id) dev_num
+					from rf_base_client
+					where delete_flag = '0'
+					and `检查时间`  &lt; #{ltMonth[4]} 
+				union all
+				select 
+					count(per_dev_id) dev_num
+					from rf_base_client
+					where delete_flag = '0'
+					and `检查时间`  &lt; #{ltMonth[5]} 
+				 
+		</select>
+		<select id="getLastCheckTypePass" resultType="hashmap">
+			 select 
+		format(100*sum(if(c.`磁盘默认共享`='合规',1,0))/count(c.id),2)  '默认共享',
+		format(100*sum(if(c.`密码复杂性`='合规',1,0)+if(c.`密码长度`='合规',1,0)+if(c.`密码最长使用期限`='合规',1,0)+if(c.`强制密码历史`='合规',1,0)+if(c.`账户锁定阙值`='合规',1,0))/(count(c.id)*5),2)  '口令管理',
+		format(100*sum(if(c.`审核登陆事件`='合规',1,0)+if(c.`审核策略更改`='合规',1,0)+if(c.`审核对象访问`='合规',1,0)+if(c.`审核目录访问`='合规',1,0)+if(c.`审核特权使用`='合规',1,0)+if(c.`审核系统事件`='合规',1,0)+if(c.`审核账户管理`='合规',1,0)+if(c.`审核过程追踪`='合规',1,0)+if(c.`审核日志容量`='合规',1,0))/(9*count(c.id)),2)  '日志审计',
+		format(100*sum(if(c.`防火墙状态`='合规',1,0)+if(c.`系统自动播放`='合规',1,0))/(2*count(c.id)),2)  '系统服务',
+		format(100*sum(if(c.`VRV是否运行`='合规',1,0)+if(c.`SEP是否运行`='合规',1,0)+if(c.`360天擎是否运行`='未检查',1,0))/(2*count(c.id)),2)  '补丁与防护软件',
+		format(100*sum(if(c.`远程强制关机`='合规',1,0)+if(c.`文件所有权`='合规',1,0))/(2*count(c.id)),2)  '认证授权',
+		format(100*sum(if(c.`重命名管理员账户`='合规',1,0)+if(c.`禁用来宾账户`='合规',1,0))/(2*count(c.id)),2)  '账户管理',
+		format(100*sum(if(c.`远程协助`='合规',1,0)+if(c.`远程桌面`='合规',1,0))/(2*count(c.id)),2)  '远程维护'
+		 from 
+		 
+				(select t.* from rf_base_client t,(select max(c.`检查时间`) maxt_date,c.per_dev_id from rf_base_client c
+		where c.delete_flag = '0'
+		AND
+		 c.`检查时间` BETWEEN #{checkStartDate} and #{checkEndDate}
+		 <if test="orgIds != null">
+			and c.`用户单位` in
+			<foreach close=")" collection="orgIds" index="index" item="orgId"
+					open="(" separator=",">#{orgId}</foreach>
+		</if>		
+		group by c.per_dev_id,c.`用户单位`) c
+		where  t.`检查时间` = c.maxt_date
+		and t.per_dev_id = c.per_dev_id
+		and t.delete_flag = '0')
+		  c
+		 where c.delete_flag = '0'
+				 
+		</select>
+		<select id="getRishNum" resultType="hashmap">
+				select sum(t.passedNum) passed_num,sum(t.high) high,sum(t.low)
+				low,sum(t.mid) mid ,count(t.id) dev_num,
+				sum(t.miss) miss
+				,sum(t.`总检查数`) total,sum(t.`总检查数`)-sum(t.passedNum)
+				no_passed_num,max(t.`检查时间`) last_check_date from (
+				select c.*,
+				IF(c.`密码复杂性`='不合规',1,0)+
+				IF(c.`远程强制关机`='不合规',1,0)+
+				IF(c.`文件所有权`='不合规',1,0)+
+				IF(c.`审核账户管理`='不合规',1,0)+
+				IF(c.`系统自动播放`='不合规',1,0)+
+				IF(c.`VRV是否运行`='不合规',1,0)+
+				IF(c.`360天擎是否运行`='不合规',1,0)+
+				IF(c.`SEP是否运行`='不合规',1,0) high,
+				IF(c.`密码最长使用期限`='不合规',1,0)+
+				IF(c.`强制密码历史`='不合规',1,0)+
+				IF(c.`账户锁定阙值`='不合规',1,0)+
+				IF(c.`防火墙状态`='不合规',1,0)+
+				IF(c.`磁盘默认共享`='不合规',1,0) low,
+				IF(c.`重命名管理员账户`='不合规',1,0)+
+				IF(c.`禁用来宾账户`='不合规',1,0)+
+				IF(c.`密码长度`='不合规',1,0)+
+				IF(c.`审核登陆事件`='不合规',1,0)+
+				IF(c.`审核策略更改`='不合规',1,0)+
+				IF(c.`审核对象访问`='不合规',1,0)+
+				IF(c.`审核目录访问`='不合规',1,0)+
+				IF(c.`审核特权使用`='不合规',1,0)+
+				IF(c.`审核系统事件`='不合规',1,0)+
+				IF(c.`审核过程追踪`='不合规',1,0)+
+				IF(c.`审核日志容量`='不合规',1,0)+
+				IF(c.`远程协助`='不合规',1,0)+
+				IF(c.`远程桌面`='不合规',1,0) mid,
+				
+				IF(c.`密码复杂性`='未检查',1,0)+
+				IF(c.`远程强制关机`='未检查',1,0)+
+				IF(c.`文件所有权`='未检查',1,0)+
+				IF(c.`审核账户管理`='未检查',1,0)+
+				IF(c.`系统自动播放`='未检查',1,0)+
+				IF(c.`VRV是否运行`='未检查',1,0)+
+				IF(c.`360天擎是否运行`='未检查',1,0)+
+				IF(c.`SEP是否运行`='未检查',1,0) +
+				IF(c.`密码最长使用期限`='未检查',1,0)+
+				IF(c.`强制密码历史`='未检查',1,0)+
+				IF(c.`账户锁定阙值`='未检查',1,0)+
+				IF(c.`防火墙状态`='未检查',1,0)+
+				IF(c.`磁盘默认共享`='未检查',1,0) +
+				IF(c.`重命名管理员账户`='未检查',1,0)+
+				IF(c.`禁用来宾账户`='未检查',1,0)+
+				IF(c.`密码长度`='未检查',1,0)+
+				IF(c.`审核登陆事件`='未检查',1,0)+
+				IF(c.`审核策略更改`='未检查',1,0)+
+				IF(c.`审核对象访问`='未检查',1,0)+
+				IF(c.`审核目录访问`='未检查',1,0)+
+				IF(c.`审核特权使用`='未检查',1,0)+
+				IF(c.`审核系统事件`='未检查',1,0)+
+				IF(c.`审核过程追踪`='未检查',1,0)+
+				IF(c.`审核日志容量`='未检查',1,0)+
+				IF(c.`远程协助`='未检查',1,0)+
+				IF(c.`远程桌面`='未检查',1,0)+
+				IF(c.`关闭系统授权`='未检查',1,0)+
+				IF(c.`SYN攻击保护`='未检查',1,0)+
+				IF(c.`网络服务器挂起时间`='未检查',1,0)+
+				IF(c.`禁止自动登录`='未检查',1,0)+
+				IF(c.`源路由欺骗保护`='未检查',1,0)+
+				IF(c.`匿名空连接`='未检查',1,0)+
+				IF(c.`碎片攻击保护`='未检查',1,0)
+				miss
+				from
+				(select t.* from rf_base_client
+				t,(select max(c.`检查时间`)
+				maxt_date,c.per_dev_id from rf_base_client c
+				where c.delete_flag = '0'
+				and c.`检查时间` BETWEEN #{checkStartDate} and
+				#{checkEndDate}
+				<if test="orgIds != null">
+						and c.`用户单位` in
+						<foreach close=")" collection="orgIds" index="index" item="orgId"
+								open="(" separator=",">#{orgId}</foreach>
+				</if>
+				group by c.per_dev_id,c.`用户单位`) c
+				where t.`检查时间` = c.maxt_date
+				and
+				t.`检查时间` BETWEEN #{checkStartDate} and #{checkEndDate}
+				and
+				t.per_dev_id = c.per_dev_id
+				and t.delete_flag = '0') c
+
+				) t
+				where
+				t.delete_flag = '0'
+				<if test="orgIds != null">
+						and t.`用户单位` in
+						<foreach close=")" collection="orgIds" index="index" item="orgId"
+								open="(" separator=",">#{orgId}</foreach>
+				</if>
+		</select>
+		<select id="getLastCheckDetail" resultType="hashmap">
+				select
+				sum(IF(c.`密码复杂性`='不合规',1,0) )'密码复杂性',
+				sum(IF(c.`远程强制关机`='不合规',1,0) ) '远程强制关机',
+				sum(IF(c.`文件所有权`='不合规',1,0)
+				) '文件所有权',
+				sum(IF(c.`审核账户管理`='不合规',1,0) ) '审核账户管理',
+				sum(IF(c.`系统自动播放`='不合规',1,0) ) '系统自动播放',
+				sum(IF(c.`VRV是否运行`='不合规',1,0) ) 'VRV是否运行',
+				sum(IF(c.`SEP是否运行`='不合规',1,0) ) 'SEP是否运行',
+				sum(IF(c.`360天擎是否运行`='不合规',1,0) ) '360天擎是否运行',
+				sum(IF(c.`密码最长使用期限`='不合规',1,0) ) '密码最长使用期限',
+				sum(IF(c.`强制密码历史`='不合规',1,0) ) '强制密码历史',
+				sum(IF(c.`账户锁定阙值`='不合规',1,0) ) '账户锁定阙值',
+				sum(IF(c.`防火墙状态`='不合规',1,0)
+				) '防火墙状态',
+				sum(IF(c.`磁盘默认共享`='不合规',1,0) ) '磁盘默认共享',
+				sum(IF(c.`重命名管理员账户`='不合规',1,0) ) '重命名管理员账户',
+				sum(IF(c.`禁用来宾账户`='不合规',1,0) ) '禁用来宾账户',
+				sum(IF(c.`密码长度`='不合规',1,0) )
+				'密码长度',
+				sum(IF(c.`审核登陆事件`='不合规',1,0) ) '审核登陆事件',
+				sum(IF(c.`审核策略更改`='不合规',1,0) ) '审核策略更改',
+				sum(IF(c.`审核对象访问`='不合规',1,0) ) '审核对象访问',
+				sum(IF(c.`审核目录访问`='不合规',1,0) ) '审核目录访问',
+				sum(IF(c.`审核特权使用`='不合规',1,0) ) '审核特权使用',
+				sum(IF(c.`审核系统事件`='不合规',1,0) ) '审核系统事件',
+				sum(IF(c.`审核过程追踪`='不合规',1,0) ) '审核过程追踪',
+				sum(IF(c.`审核日志容量`='不合规',1,0) )'审核日志容量',
+				sum(IF(c.`远程协助`='不合规',1,0) )
+				'远程协助',
+				sum(IF(c.`远程桌面`='不合规',1,0) ) '远程桌面'
+
+				from
+
+				(select t.* from
+				rf_base_client t,(select max(c.`检查时间`)
+				maxt_date,c.per_dev_id from
+				rf_base_client c
+				where c.delete_flag = '0'
+				and c.`检查时间` BETWEEN
+				#{checkStartDate} and #{checkEndDate}
+				<if test="orgIds != null">
+						and c.`用户单位` in
+						<foreach close=")" collection="orgIds" index="index" item="orgId"
+								open="(" separator=",">#{orgId}</foreach>
+				</if>
+				group by c.per_dev_id,c.`用户单位`) c
+				where t.`检查时间` = c.maxt_date
+				and
+				t.per_dev_id = c.per_dev_id
+				and t.delete_flag = '0') c
+				where
+				c.delete_flag = '0'
+				and c.`检查时间` BETWEEN #{checkStartDate} and
+				#{checkEndDate}
+				<if test="orgIds != null">
+						and c.`用户单位` in
+						<foreach close=")" collection="orgIds" index="index" item="orgId"
+								open="(" separator=",">#{orgId}</foreach>
+				</if>
+
+		</select>
+		<select id="getSid" resultType="hashmap">
+				select CONCAT('rf_',s.Slid) sid
+				,s.Slname name,s.risk from
+				rf_base_securitylist s
+		</select>
+
+		<select id="getSbItemFailureDistribution" resultType="hashmap">
+
+				SELECT t.* FROM
+				(SELECT g.ORG_NAME org_name,c.`用户姓名` user_name,
+				IF(c.`密码复杂性` = '不合规',1, 0) +
+				IF(c.`远程强制关机` = '不合规', 1, 0) +
+				IF(c.`文件所有权` = '不合规',1, 0) +
+				IF(c.`审核账户管理` = '不合规', 1, 0) +
+				IF(c.`系统自动播放` = '不合规', 1, 0) +
+				IF(c.`VRV是否运行` = '不合规', 1, 0) +
+				IF(c.`360天擎是否运行`='不合规',1,0) +
+				IF(c.`SEP是否运行` = '不合规', 1, 0) risk_high,
+				IF(c.`重命名管理员账户` = '不合规', 1,
+				0) +
+				IF(c.`禁用来宾账户` = '不合规', 1, 0) +
+				IF(c.`密码长度` = '不合规', 1, 0) +
+				IF(c.`审核登陆事件` = '不合规', 1, 0) +
+				IF(c.`审核策略更改` = '不合规', 1, 0) +
+				IF(c.`审核对象访问` = '不合规', 1, 0) +
+				IF(c.`审核目录访问` = '不合规', 1, 0) +
+				IF(c.`审核特权使用` = '不合规', 1, 0) +
+				IF(c.`审核系统事件` = '不合规', 1, 0) +
+				IF(c.`审核过程追踪` = '不合规', 1, 0) +
+				IF(c.`审核日志容量` = '不合规', 1, 0) +
+				IF(c.`远程协助` = '不合规', 1, 0) +
+				IF(c.`远程桌面` = '不合规', 1, 0) risk_mid,
+				IF(c.`密码最长使用期限` = '不合规', 1, 0) +
+				IF(c.`强制密码历史` = '不合规', 1, 0) +
+				IF(c.`账户锁定阙值` = '不合规', 1, 0) +
+				IF(c.`防火墙状态` = '不合规', 1, 0) +
+				IF(c.`磁盘默认共享` = '不合规', 1, 0) risk_low,
+				c.score
+				compliance_rate,c.`检查时间` last_check_time,c.id last_check_id
+				FROM
+				(SELECT t.* FROM rf_base_client t,
+				(SELECT MAX(c.`检查时间`) maxt_date,
+				c.per_dev_id
+				FROM rf_base_client c
+				WHERE c.delete_flag = '0'
+				AND
+				c.`用户单位`
+				IN
+				<foreach close=")" collection="org_ids" index="index" item="orgId"
+						open="(" separator=",">#{orgId}</foreach>
+				AND c.`检查时间` BETWEEN #{from_date} AND #{to_date}
+				GROUP BY
+				c.per_dev_id , c.`用户单位`) c
+				WHERE
+				t.`检查时间` = c.maxt_date
+				AND t.`检查时间`
+				BETWEEN #{from_date} AND #{to_date}
+				AND t.per_dev_id = c.per_dev_id
+				AND t.delete_flag = '0') c
+				LEFT JOIN p_auth_org g ON c.`用户单位` =
+				g.ORG_ID
+				WHERE
+				c.delete_flag = 0
+				<choose>
+						<when test="item_name == '重命名管理员账户'">
+								AND c.`重命名管理员账户`= '不合规'
+						</when>
+						<when test="item_name == '禁用来宾账户'">
+								AND c.`禁用来宾账户`= '不合规'
+						</when>
+						<when test="item_name == '密码复杂性'">
+								AND c.`密码复杂性`= '不合规'
+						</when>
+						<when test="item_name == '密码长度'">
+								AND c.`密码长度` = '不合规'
+						</when>
+						<when test="item_name == '密码最长使用期限'">
+								AND c.`密码最长使用期限` = '不合规'
+						</when>
+						<when test="item_name == '强制密码历史'">
+								AND c.`强制密码历史` = '不合规'
+						</when>
+						<when test="item_name == '账户锁定阈值'">
+								AND c.`账户锁定阈值` = '不合规'
+						</when>
+						<when test="item_name == '远程强制关机'">
+								AND c.`远程强制关机` = '不合规'
+						</when>
+						<when test="item_name == '关闭系统授权'">
+								AND c.`关闭系统授权` = '不合规'
+						</when>
+						<when test="item_name == '文件所有权'">
+								AND c.`文件所有权` = '不合规'
+						</when>
+						<when test="item_name == '审核登录事件'">
+								AND c.`审核登录事件` = '不合规'
+						</when>
+						<when test="item_name == '审核策略更改'">
+								AND c.`审核策略更改` = '不合规'
+						</when>
+						<when test="item_name == '审核对象访问'">
+								AND c.`审核对象访问` = '不合规'
+						</when>
+						<when test="item_name == '审核目录访问'">
+								AND c.`审核目录访问` = '不合规'
+						</when>
+						<when test="item_name == '审核特权使用'">
+								AND c.`审核特权使用` = '不合规'
+						</when>
+						<when test="item_name == '审核系统事件'">
+								AND c.`审核系统事件` = '不合规'
+						</when>
+						<when test="item_name == '审核账户管理'">
+								AND c.`审核账户管理` = '不合规'
+						</when>
+						<when test="item_name == '审核过程追踪'">
+								AND c.`审核过程追踪`= '不合规'
+						</when>
+						<when test="item_name == '审核日志容量'">
+								AND c.`审核日志容量` = '不合规'
+						</when>
+						<when test="item_name == '防火墙状态'">
+								AND c.`防火墙状态`= '不合规'
+						</when>
+						<when test="item_name == 'SYN攻击保护'">
+								AND c.`SYN攻击保护` = '不合规'
+						</when>
+						<when test="item_name == '网络服务器挂起时间'">
+								AND c.`网络服务器挂起时间` = '不合规'
+						</when>
+						<when test="item_name == '系统自动播放'">
+								AND c.`系统自动播放` = '不合规'
+						</when>
+						<when test="item_name == 'SEP是否运行'">
+								AND c.`SEP是否运行`= '不合规'
+						</when>
+						<when test="item_name == 'VRV是否运行'">
+								AND c.`VRV是否运行` = '不合规'
+						</when>
+						<when test="item_name == '360天擎是否运行'">
+								AND c.`360天擎是否运行` = '不合规'
+						</when>
+						<when test="item_name == '磁盘默认共享'">
+								AND c.`磁盘默认共享` = '不合规'
+						</when>
+						<when test="item_name == '远程协助'">
+								AND c.`远程协助` = '不合规'
+						</when>
+						<when test="item_name == '远程桌面'">
+								AND c.`远程桌面` = '不合规'
+						</when>
+						<when test="item_name == '禁止自动登录'">
+								AND c.`禁止自动登录` = '不合规'
+						</when>
+						<when test="item_name == '源路由欺骗保护'">
+								AND c.`源路由欺骗保护` = '不合规'
+						</when>
+						<when test="item_name == '匿名空连接'">
+								AND c.`匿名空连接`= '不合规'
+						</when>
+						<when test="item_name == '碎片攻击保护'">
+								AND c.`碎片攻击保护` = '不合规'
+						</when>
+						<otherwise>
+
+						</otherwise>
+				</choose>
+				ORDER BY c.`检查时间` DESC) t
+		</select>
+
+		<select id="getSbLevelFailureDistribution" resultType="hashmap">
+
+				SELECT t.* FROM
+				(SELECT g.ORG_NAME org_name,c.`用户姓名` user_name,
+
+				IF(c.`密码复杂性` = '不合规',1, 0) +
+				IF(c.`远程强制关机` = '不合规', 1, 0) +
+				IF(c.`文件所有权` = '不合规',1, 0) +
+				IF(c.`审核账户管理` = '不合规', 1, 0) +
+				IF(c.`系统自动播放` = '不合规', 1, 0) +
+				IF(c.`VRV是否运行` = '不合规', 1, 0) +
+				IF(c.`360天擎是否运行`='不合规',1,0) +
+				IF(c.`SEP是否运行` = '不合规', 1, 0) risk_high,
+				IF(c.`重命名管理员账户` = '不合规', 1,
+				0) +
+				IF(c.`禁用来宾账户` = '不合规', 1, 0) +
+				IF(c.`密码长度` = '不合规', 1, 0) +
+				IF(c.`审核登陆事件` = '不合规', 1, 0) +
+				IF(c.`审核策略更改` = '不合规', 1, 0) +
+				IF(c.`审核对象访问` = '不合规', 1, 0) +
+				IF(c.`审核目录访问` = '不合规', 1, 0) +
+				IF(c.`审核特权使用` = '不合规', 1, 0) +
+				IF(c.`审核系统事件` = '不合规', 1, 0) +
+				IF(c.`审核过程追踪` = '不合规', 1, 0) +
+				IF(c.`审核日志容量` = '不合规', 1, 0) +
+				IF(c.`远程协助` = '不合规', 1, 0) +
+				IF(c.`远程桌面` = '不合规', 1, 0) risk_mid,
+				IF(c.`密码最长使用期限` = '不合规', 1, 0) +
+				IF(c.`强制密码历史` = '不合规', 1, 0) +
+				IF(c.`账户锁定阙值` = '不合规', 1, 0) +
+				IF(c.`防火墙状态` = '不合规', 1, 0) +
+				IF(c.`磁盘默认共享` = '不合规', 1, 0) risk_low,
+				c.score
+				compliance_rate,c.`检查时间` last_check_time,c.id last_check_id
+				FROM
+				(SELECT t.* FROM rf_base_client t,
+				(SELECT MAX(c.`检查时间`) maxt_date,
+				c.per_dev_id
+				FROM rf_base_client c
+				WHERE c.delete_flag = '0'
+				AND
+				c.`用户单位`
+				IN
+				<foreach close=")" collection="org_ids" index="index" item="orgId"
+						open="(" separator=",">#{orgId}</foreach>
+				AND c.`检查时间` BETWEEN #{start_date} AND #{end_date}
+				GROUP BY
+				c.per_dev_id , c.`用户单位`) c
+				WHERE
+				t.`检查时间` = c.maxt_date
+				AND t.`检查时间`
+				BETWEEN #{start_date} AND #{end_date}
+				AND t.per_dev_id = c.per_dev_id
+				AND t.delete_flag = '0') c
+				LEFT JOIN p_auth_org g ON c.`用户单位` =
+				g.ORG_ID
+				WHERE
+				c.delete_flag = 0
+				<choose>
+						<when test="level == 'high'">
+								AND (c.`密码复杂性` = '不合规' or c.`远程强制关机` = '不合规'
+								or
+								c.`文件所有权` = '不合规' or c.`审核账户管理` = '不合规'
+								or c.`系统自动播放` = '不合规' or
+								c.`360天擎是否运行`='不合规' or
+								c.`VRV是否运行` = '不合规' or c.`SEP是否运行` = '不合规')
+						</when>
+						<when test="level == 'mid'">
+								AND (c.`重命名管理员账户` = '不合规' or c.`禁用来宾账户` = '不合规'
+								or
+								c.`密码长度` = '不合规' or c.`审核登陆事件` = '不合规'
+								or c.`审核策略更改` = '不合规' or
+								c.`审核对象访问` = '不合规'
+								or c.`审核目录访问` = '不合规' or c.`审核特权使用` = '不合规'
+								or
+								c.`审核系统事件` = '不合规' or c.`审核过程追踪` = '不合规'
+								or c.`审核日志容量` = '不合规' or
+								c.`远程协助` = '不合规' or c.`远程桌面` = '不合规')
+						</when>
+						<when test="level == 'low'">
+								AND (c.`密码最长使用期限` = '不合规' or c.`强制密码历史` = '不合规'
+								or
+								c.`账户锁定阙值` = '不合规' or c.`防火墙状态` = '不合规' or c.`磁盘默认共享` = '不合规')
+						</when>
+						<otherwise>
+
+						</otherwise>
+				</choose>
+				ORDER BY c.`检查时间` DESC) t
+		</select>
+</mapper>
